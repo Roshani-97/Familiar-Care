@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0055aa;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 100px;
+            white-space: pre-wrap;
+            background-color: #f8f8f8;
+        }
+        h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pet Care API Testing</h1>
+    
+    <div class="container">
+        <h3>Health Check</h3>
+        <button onclick="checkHealth()">Test Health Endpoint</button>
+    </div>
+    
+    <div class="container">
+        <h3>Encyclopedia API</h3>
+        <button onclick="searchPets()">Get All Pets</button>
+        <button onclick="searchPets('dog')">Search for Dogs</button>
+        <button onclick="searchPets('cat')">Search for Cats</button>
+        <button onclick="searchPets('bird')">Search for Birds</button>
+    </div>
+    
+    <div class="container">
+        <h3>Pet Details</h3>
+        <button onclick="getPetDetails('labrador retriever')">Get Labrador Info</button>
+        <button onclick="getPetDetails('persian')">Get Persian Cat Info</button>
+        <button onclick="getPetDetails('budgerigar')">Get Budgerigar Info</button>
+    </div>
+    
+    <div class="container">
+        <h3>Chatbot API</h3>
+        <div style="display: flex;">
+            <input type="text" id="messageInput" placeholder="Enter message..." style="flex: 1; padding: 8px; margin-right: 10px;">
+            <button onclick="sendMessage()">Send Message</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <button onclick="testMessage('My dog is vomiting')">Test: Dog Vomiting</button>
+            <button onclick="testMessage('My cat is scratching a lot')">Test: Cat Scratching</button>
+            <button onclick="testMessage('My dog has a cough')">Test: Dog Coughing</button>
+        </div>
+    </div>
+    
+    <h3>Result:</h3>
+    <div id="result"></div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        
+        function displayResult(data) {
+            const resultElement = document.getElementById('result');
+            resultElement.innerText = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+        }
+        
+        function handleError(error) {
+            displayResult(`Error: ${error.message}`);
+            console.error(error);
+        }
+        
+        async function checkHealth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                const data = await response.json();
+                displayResult(data);
+            } catch (error) {
+                handleError(error);
+            }
+        }
+        
+        async function searchPets(query = '') {
+            try {
+                const url = query ? 
+                    `${API_BASE_URL}/encyclopedia/search?query=${encodeURIComponent(query)}` : 
+                    `${API_BASE_URL}/encyclopedia/search`;
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                const data = await response.json();
+                displayResult(data);
+            } catch (error) {
+                handleError(error);
+            }
+        }
+        
+        async function getPetDetails(breed) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/encyclopedia/pet?breed=${encodeURIComponent(breed)}`);
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                const data = await response.json();
+                displayResult(data);
+            } catch (error) {
+                handleError(error);
+            }
+        }
+        
+        async function sendMessage() {
+            const message = document.getElementById('messageInput').value;
+            if (!message.trim()) {
+                alert('Please enter a message');
+                return;
+            }
+            
+            testMessage(message);
+        }
+        
+        async function testMessage(message) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/chatbot`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
+                
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                const data = await response.json();
+                displayResult(data);
+                
+                if (document.getElementById('messageInput')) {
+                    document.getElementById('messageInput').value = message;
+                }
+            } catch (error) {
+                handleError(error);
+            }
+        }
+    </script>
+</body>
+</html> 
