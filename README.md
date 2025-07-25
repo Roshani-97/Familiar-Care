@@ -1,6 +1,9 @@
 # Familiar-Care
 Familiar Care is an animal healthcare app guiding pet and livestock care.
 
+- ## 📺 Demo Video
+(https://www.youtube.com/watch?v=DS9hSidZO3E)
+
 For the Backend Server:
   1.Navigate to the Backend directory:
     cd Backend
@@ -160,8 +163,6 @@ A comprehensive pet health management system that combines AI-powered chatbot as
 - TypeScript strict mode
 - ESLint for code quality
 - Tailwind CSS for styling
-- ## 📺 Demo Video
-(https://www.youtube.com/watch?v=DS9hSidZO3E)
 
 ## 📝 License
 
