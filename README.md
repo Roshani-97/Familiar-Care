@@ -1,8 +1,6 @@
 # Familiar-Care
 Familiar Care is an animal healthcare app guiding pet and livestock care.
 
-- ## 📺 Demo Video
-(https://www.youtube.com/watch?v=DS9hSidZO3E)
 
 For the Backend Server:
   1.Navigate to the Backend directory:
